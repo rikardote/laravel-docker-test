@@ -44,15 +44,26 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: laraveluser
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql/
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8081:80
+    environment:
+      MYSQL_USERNAME: "${DB_USERNAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      PMA_HOST: db
     networks:
       - app-network
 
